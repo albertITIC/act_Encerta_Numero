@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <title>FIND NUMBER</title>
+</head>
+<body>
+
+    <header class="header"> 
+        <div class="titol">
+            <h1 clas> Busca un número entre 1 i 20 </h1>
+        </div>
+
+        <div class="boto-reiniciar">
+            <button onclick="reiniciaPartida()"> Reinicia! </button>
+        </div>
+        <br>
+    </header>
+
+    <!-- He fet un div per poder guardar el main i el footer per canviar més endavant les seves propietats (p.e el fons de pantalla)-->
+    <main class="main" id="info-main">
+        <h2> Busca el número !</h2>
+        <h3 id="resultat"> ? </h3>
+        <h3 id="text-inici"> Comencem la partida... </h3> <!--He de canviar el text per quan encerti el número-->
+    </main> 
+        
+    
+    <footer class="footer" id="info-footer">
+        <div class="footer-primeraPart">
+            <input id="num" type="number"> <!-- capçalera del input -->
+            <button onclick="jugada()">Prova!</button> <!--Botó-->
+            </div>
+    
+            <div class="footer-segonaPart">
+                <p>💯 Jugades: <span id="numComptador">20</span> </p> 
+                <p>🥇 Total punts: <span id="totalPunts">0</span></p>
+            </div>  
+    </footer>
+
+    <!--Per fer events de la web = Funcions  -->
+    <script>
+        //CONSTANTS DEL JOC
+        const NUM_JUGADES = 20; //Variable global, sempre serà 20.
+
+        //Variables del joc que s'anirà decrementant (inicialment sempre tenim 20)
+        let numJugades = NUM_JUGADES; //variable global (sempre serà 20 jugades)
+
+        //Punts inicials, no canvia = variable constant
+        const TOTAL_PUNTS = 0;
+        let totalPunts = TOTAL_PUNTS;
+
+
+        //Declarem la funció al event - ES SOL UN EXEMPLE NO FEM SERVIR ALERTS function mostraHelloWorld(){alert("Hello world");}
+        function reiniciaPartida(){
+            //L'input li assignaré un espai en blanc per quan reinici.
+            let num = document.getElementById("num");
+            num.value="";
+
+            //RESTABLIR LES DADES DEL JOC. 
+            //Aquestes són el Número de jugades/intents, el número total de punts, color de fons de pantalla, text...
+            //Primer reinicio el número de jugades
+            numJugades = NUM_JUGADES;
+            
+            //Agafo el contador d'intents i el restablim al número total de jugades
+            document.getElementById("numComptador").textContent = numJugades;
+
+            //Reiniciar els punts
+            document.getElementById("totalPunts").textContent = totalPunts;
+
+            //Reiniciaré els valors de la pantalla/ info (ja sigui si perquè hagi guanyat/ perdut o si decideix reiniciar per compte pròpia)
+            //Reinicia el text que dona la informació del número secret
+            document.getElementById("resultat").textContent = "?";
+
+            //Un cop reinici actualitzaré el text que apareix per pantalla, per el text inicial.
+            document.getElementById("text-inici").textContent = "Comencem partida...";
+
+            //Canviar el color de fons del main i del footer per negre (color inicial)
+            document.getElementById("info-main").style.backgroundColor="Black";
+            document.getElementById("info-footer").style.backgroundColor="Black";
+
+            //Reiniciar els punts
+            document.getElementById("totalPunts").textContent = 0;
+            totalPunts = 0;
+
+            //Generar un nou número aleatori
+            document.getElementById("totalPunts").textContent = 0;
+        }
+        
+        function jugada(){
+            //Agafo l'ID del número que introdueixi l'usuari per l'input.
+            let num = document.getElementById("num").value; //he de posar un .value, si no fa referencia al objecte 
+            
+            if(num){ //Condicional de si l'ID reb un valor
+                numJugades -= 1; //= numJugades -1 o --numJugades
+                document.getElementById("numComptador").textContent = numJugades; //Agafem l'ID del contador==20 i per cada intent s'anirà restant.
+
+                //If que comprova que el número de jugades suficients per seguir jugant (no pot ser inferior a 0)
+                if(numJugades>0){
+                    //Si l'encerta
+                        if(num == numSecretEnter){
+                        document.getElementById("resultat").textContent =  numSecretEnter; //Canvio el "?" per el número secret
+                        //Crear variable per poder canviar la info del main    
+                        document.getElementById("info-main").style.backgroundColor ="Green";
+                        //Text del text
+                        document.getElementById("text-inici").textContent = "Número correcte!";
+                        //El footer també canviarà de color
+                        document.getElementById("info-footer").style.backgroundColor ="Green";
+
+                        let puntsGuanyats = numJugades;
+                        totalPunts += puntsGuanyats; // Afegim punts guanyats als punts totals
+                        document.getElementById("totalPunts").textContent = totalPunts;
+
+
+                    } else if (num > numSecretEnter){
+                        //Text que donarà info del número introduït
+                        document.getElementById("resultat").textContent = "El número introduït és massa gran!";
+                        //Seguiré amb el color de fons de pantalla predeterminat
+                        document.getElementById("info-main").style.backgroundColor = "Black";
+                        //Text del text
+                        document.getElementById("text-inici").textContent = "Número incorrecte!";
+
+                        document.getElementById("info-footer").style.backgroundColor = "Black";
+
+                    } else if(num < numSecretEnter){
+                        //Text que informarà al usuari que és massa petit
+                        document.getElementById("resultat").textContent = "El número introduiït és massa petit!";
+                        document.getElementById("info-main").style.backgroundColor = "Black";
+                        //Text del text
+                        document.getElementById("text-inici").textContent = "Número incorrecte!";
+
+                        document.getElementById("info-footer").style.backgroundColor = "Black";
+                    }
+                } else{ //En cas contrari notificaré al usuari que NO ha introduït cap valor al input.
+                    //He de dir al usuari que no disposa de més oportunitats (número de jugades)
+                    //Modifico el text i color de fons, haurà perdut.
+                    document.getElementById("resultat").textContent = numSecretEnter;
+                    document.getElementById("text-inici").textContent = "Final de la partida";
+                    document.getElementById("info-main").style.backgroundColor = "Red";
+                    document.getElementById("info-footer").style.backgroundColor = "Red";
+
+                }
+            } else{
+                //Si no detecta cap valor avisem al usuari.
+                alert("No has introduït cap valor");
+            }
+            //console.log("Número de jugades restants: " + numJugades, typeof numJugades); 
+            let number = Number(num); //un input sense valor es sempre un String
+            // console.log(num); //num que introdueixo
+
+        }
+        //Per crear el número secret del noste joc
+        const MAX_NUM = 20; //Número màxim que podem obtenir
+        const MIN_NUM = 1;  //Número mínim que podem obtenir
+
+        let numSec = Math.random() * (MAX_NUM+1); //alternativa ==> let numSec = Math.random()*20;
+        let numSecretEnter = Math.floor(numSec) + MIN_NUM;
+        console.log("Número secret: " + numSecretEnter);
+
+
+    </script>       
+</body>
+</html>
